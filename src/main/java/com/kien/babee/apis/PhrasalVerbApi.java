@@ -3,10 +3,11 @@ package com.kien.babee.apis;
 import com.kien.babee.dto.ParagraphDTO;
 import com.kien.babee.entities.PhrasalVerb;
 import com.kien.babee.repositories.PhrasalVerbRepository;
-import com.kien.babee.utils.BaBeeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -34,9 +35,11 @@ public class PhrasalVerbApi {
     }
 
     @PostMapping("/doCatchWords")
-    public List<String> getAllUsers(@ModelAttribute("paragraphDTO") ParagraphDTO paragraphDTO) {
+    public ModelAndView getAllUsers(@ModelAttribute("paragraphDTO") ParagraphDTO paragraphDTO) {
         LOG.info("Call get doCatchWords.");
-        return BaBeeUtil.getListSentences(paragraphDTO.getContent());
+        ModelMap modelMap = new ModelMap();
+        modelMap.addAttribute("content", paragraphDTO.getContent());
+        return new ModelAndView("redirect:/catch-the-words", modelMap);
     }
 
 }
