@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface  PhrasalVerbDAL {
 
-    PhrasalVerb getByVerb (String verb);
+    List<PhrasalVerb> getByVerb (String verb);
     List<PhrasalVerb> getListByVerb (String verb);
     PhrasalVerb getByVerbAndPreposition (String verb, String preposition);
 

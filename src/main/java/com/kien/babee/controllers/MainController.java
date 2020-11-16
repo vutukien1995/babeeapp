@@ -1,9 +1,11 @@
 package com.kien.babee.controllers;
 
 import com.kien.babee.dalimpl.PhrasalVerbDALImpl;
+import com.kien.babee.entities.Contribute;
 import com.kien.babee.entities.MostCommonWord;
 import com.kien.babee.entities.PhrasalVerb;
 import com.kien.babee.entities.Word;
+import com.kien.babee.repositories.ContributeRepository;
 import com.kien.babee.repositories.MostCommonWordRepository;
 import com.kien.babee.repositories.PhrasalVerbRepository;
 import com.kien.babee.utils.BaBeeUtil;
@@ -24,21 +26,38 @@ public class MainController {
 
     private final PhrasalVerbRepository phrasalVerbRepository;
     private final MostCommonWordRepository mostCommonWordRepository;
+    private final ContributeRepository contributeRepository;
     private final PhrasalVerbDALImpl phrasalVerbDAL;
 
     public MainController (PhrasalVerbRepository phrasalVerbRepository,
                            PhrasalVerbDALImpl phrasalVerbDAL,
-                           MostCommonWordRepository mostCommonWordRepository) {
+                           MostCommonWordRepository mostCommonWordRepository,
+                           ContributeRepository contributeRepository) {
         this.phrasalVerbRepository = phrasalVerbRepository;
         this.phrasalVerbDAL = phrasalVerbDAL;
         this.mostCommonWordRepository = mostCommonWordRepository;
+        this.contributeRepository = contributeRepository;
     }
 
     @GetMapping("/")
     public ModelAndView index() {
         LOG.info("Index ");
+
+        List<Contribute> contributeLst = contributeRepository.findAll();
+
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("index");
+        modelAndView.addObject("title", "Home");
+        modelAndView.addObject("contributeLst", contributeLst);
+        modelAndView.setViewName("home");
+        return modelAndView;
+    }
+
+    @GetMapping("/test")
+    public ModelAndView test() {
+        LOG.info("Index ");
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("title", "Test");
+        modelAndView.setViewName("test");
         return modelAndView;
     }
 
@@ -46,6 +65,7 @@ public class MainController {
     public ModelAndView catchTheWords(@RequestParam(value="content", required=false, defaultValue = "") String content) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("content", content);
+        modelAndView.addObject("title", "Catch Words");
         modelAndView.setViewName("catchWords");
 
         // Catch phrasal verbs
@@ -60,9 +80,9 @@ public class MainController {
         for (String sentence : listSentence) {
             String[] listWordInSentence = sentence.split(" ");
             for (String word: listWordInSentence) {
-                String w = word.trim().toLowerCase().replaceAll("[^a-zA-Z0-9]","");
+                String w = BaBeeUtil.removeSpecialCharacters(word);
                 if (w.isEmpty()) continue;
-                
+
                 MostCommonWord commonWord = listAllCommonWords.stream()
                         .filter(element -> w.equals(element.getWord()))
                         .findAny().orElse(null);
@@ -75,14 +95,38 @@ public class MainController {
                 }
             }
         }
+        // Check words after catch with api
+
+
         modelAndView.addObject("wordLst", listWord);
 
         return modelAndView;
     }
 
+    @GetMapping("/phrasal-verbs")
+    public ModelAndView phrasal_verbs() {
+        LOG.info("Call phrasal-verbs");
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("title", "Phrasal Verb");
+        modelAndView.setViewName("phrasalVerbs");
+        return modelAndView;
+    }
+
+    @GetMapping("/contribute-phrasal-verbs")
+    public ModelAndView contribute_phrasal_verbs() {
+        LOG.info("Index ");
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("title", "Contribute Phrasal Verbs");
+        modelAndView.setViewName("contributePhrasalVerbs");
+        return modelAndView;
+    }
+
+
     public static void main(String[] args) {
-        String str= "This#string%contains^special*characters&\".";
-        str = str.replaceAll("[^a-zA-Z0-9]"," ");
+        String str= "This#string-contains^s'^pecial*characters& Country: How One Family’s\".";
+        str = str.replaceAll("’s","");
+        str = str.replaceAll("'s","");
+        str = str.replaceAll("[:,\"]","");
         System.out.println(str);
     }
 

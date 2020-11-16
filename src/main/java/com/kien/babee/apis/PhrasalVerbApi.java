@@ -1,5 +1,6 @@
 package com.kien.babee.apis;
 
+import com.kien.babee.dalimpl.PhrasalVerbDALImpl;
 import com.kien.babee.dto.ParagraphDTO;
 import com.kien.babee.entities.PhrasalVerb;
 import com.kien.babee.repositories.PhrasalVerbRepository;
@@ -17,9 +18,12 @@ public class PhrasalVerbApi {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     private final PhrasalVerbRepository phrasalVerbRepository;
+    private final PhrasalVerbDALImpl phaPhrasalVerbDALImpl;
 
-    public PhrasalVerbApi(PhrasalVerbRepository phrasalVerbRepository) {
+    public PhrasalVerbApi(PhrasalVerbRepository phrasalVerbRepository,
+                          PhrasalVerbDALImpl phaPhrasalVerbDALImpl) {
         this.phrasalVerbRepository = phrasalVerbRepository;
+        this.phaPhrasalVerbDALImpl = phaPhrasalVerbDALImpl;
     }
 
     @PostMapping("/create")
@@ -42,4 +46,18 @@ public class PhrasalVerbApi {
         return new ModelAndView("redirect:/catch-the-words", modelMap);
     }
 
+    @GetMapping("/getByVerb")
+    public List<PhrasalVerb> getByVerb(@RequestParam(value="verb", required=false, defaultValue = "") String verb) {
+        LOG.info("Getting all PhrasalVerb.");
+        return (List<PhrasalVerb>) phaPhrasalVerbDALImpl.getByVerb(verb);
+    }
+
+    @GetMapping("/createByList")
+    public String addNewByList (@RequestParam(value="text", required=false, defaultValue = "") String text) {
+        LOG.info("Saving a new PhrasalVerb.");
+
+        String[] lines = text.split("/r");
+
+        return "hehe";
+    }
 }

@@ -3,6 +3,8 @@ package com.kien.babee.entities;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
+
 @Document
 public class MostCommonWord {
 
@@ -10,6 +12,15 @@ public class MostCommonWord {
     private String id;
     private String word;
     private String level;
+    private Date creationDate = new Date();
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
 
     public String getLevel() {
         return level;

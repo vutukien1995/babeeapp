@@ -39,4 +39,20 @@ public class BaBeeUtil {
 
         return list;
     }
+
+    public static String removeSpecialCharacters (String text) {
+        // remove possessive adjectives
+        text = text.replaceAll("’s","");
+        text = text.replaceAll("'s","");
+
+        // remove special characters
+        text = text.replaceAll("[-–.:,“”\"]","");
+
+        text = text.trim().toLowerCase();
+
+        //
+        text = text.replaceAll("[0-9]", "");
+
+        return text;
+    }
 }

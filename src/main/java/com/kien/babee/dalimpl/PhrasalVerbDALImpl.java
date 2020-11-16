@@ -17,10 +17,10 @@ public class PhrasalVerbDALImpl implements PhrasalVerbDAL {
     private MongoTemplate mongoTemplate;
 
     @Override
-    public PhrasalVerb getByVerb(String verb) {
+    public List<PhrasalVerb> getByVerb(String verb) {
         Query query = new Query();
         query.addCriteria(Criteria.where("verb").is(verb));
-        return mongoTemplate.findOne(query, PhrasalVerb.class);
+        return (List<PhrasalVerb>) mongoTemplate.find(query, PhrasalVerb.class);
     }
 
     @Override

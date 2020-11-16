@@ -7,6 +7,7 @@ import java.util.Date;
 
 @Document
 public class PhrasalVerb {
+
     @Id
     private String id;
     private String verb;
@@ -15,6 +16,15 @@ public class PhrasalVerb {
     private String definition;
     private String example;
     private Date creationDate = new Date();
+    private String contributor;
+
+    public String getContributor() {
+        return contributor;
+    }
+
+    public void setContributor(String contributor) {
+        this.contributor = contributor;
+    }
 
     public String getId() {
         return id;

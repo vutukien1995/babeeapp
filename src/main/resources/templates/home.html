@@ -1,15 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset = "ISO-8859-1" />
-    <link href = "css/styles.css" rel = "stylesheet"/>
-    <title>Spring Boot Application</title>
-</head>
+<#import "layout.html" as layout>
 
+<@layout.page>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+            <#if contributeLst??>
+            <#list contributeLst as contribute>
+            <div class="post-preview">
+                <a href="post.html">
+                    <h2 class="post-title">
+                        Thanks for contribution of ${contribute.contributor!''}
+                    </h2>
+                    <h3 class="post-subtitle">
+                        ${contribute.type!''}
+                    </h3>
+                </a>
+                <p class="post-meta">Posted by
+                    <a href="#">${contribute.contributor!''}</a>
+                    on ${contribute.createdDate!''}</p>
+            </div>
+            </#list>
+            </#if>
 
-<body>
-    <h4>Welcome to Thymeleaf Spring Boot web application</h4>
-</body>
-
-
-</html>
+            <!-- Pager -->
+            <div class="clearfix">
+                <a class="btn btn-primary float-right" href="#">Older Posts &rarr;</a>
+            </div>
+        </div>
+    </div>
+</div>
+</@layout.page>
