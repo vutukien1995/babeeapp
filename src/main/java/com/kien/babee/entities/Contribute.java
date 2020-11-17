@@ -14,9 +14,26 @@ public class Contribute {
     private String contributor;
     private String type;
     private Date creationDate = new Date();
+    private String status = "NEW";
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public String getId() {
         return id;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 
     public void setId(String id) {

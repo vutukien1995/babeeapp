@@ -9,8 +9,10 @@ import com.kien.babee.repositories.ContributeRepository;
 import com.kien.babee.repositories.MostCommonWordRepository;
 import com.kien.babee.repositories.PhrasalVerbRepository;
 import com.kien.babee.utils.BaBeeUtil;
+import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,7 +45,7 @@ public class MainController {
     public ModelAndView index() {
         LOG.info("Index ");
 
-        List<Contribute> contributeLst = contributeRepository.findAll();
+        List<Contribute> contributeLst = contributeRepository.findAll(Sort.by(Sort.Direction.DESC, "creationDate"));
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("title", "Home");
@@ -68,20 +70,18 @@ public class MainController {
         modelAndView.addObject("title", "Catch Words");
         modelAndView.setViewName("catchWords");
 
-        // Catch phrasal verbs
-        List<PhrasalVerb> list = new ArrayList<>();
-        list.addAll(phrasalVerbDAL.getListByVerb("look"));
-        modelAndView.addObject("phrasalVerbLst", list);
-
         // Catch unknow words
         List<String> listSentence = BaBeeUtil.getListSentences(content);
         List<Word> listWord = new ArrayList<>();
         List<MostCommonWord> listAllCommonWords = mostCommonWordRepository.findAll();
+        List<List<String>> listWordForPhrasalVerb = new ArrayList<>();
         for (String sentence : listSentence) {
+            List<String> listWordForPV = new ArrayList<>();
             String[] listWordInSentence = sentence.split(" ");
             for (String word: listWordInSentence) {
                 String w = BaBeeUtil.removeSpecialCharacters(word);
                 if (w.isEmpty()) continue;
+                listWordForPV.add(w);
 
                 MostCommonWord commonWord = listAllCommonWords.stream()
                         .filter(element -> w.equals(element.getWord()))
@@ -94,10 +94,21 @@ public class MainController {
                     listWord.add(word_to_view);
                 }
             }
+            listWordForPhrasalVerb.add(listWordForPV);
         }
         // Check words after catch with api
 
+        // Catch phrasal verbs
+        List<PhrasalVerb> phrasalVerbLst = new ArrayList<>();
+        for (List<String> pvList : listWordForPhrasalVerb) {
+            for (String word : pvList) {
+                List<PhrasalVerb> list = phrasalVerbDAL.getListByVerb(word);
 
+                phrasalVerbLst.addAll(list);
+            }
+        }
+
+        modelAndView.addObject("phrasalVerbLst", phrasalVerbLst);
         modelAndView.addObject("wordLst", listWord);
 
         return modelAndView;
@@ -114,12 +125,52 @@ public class MainController {
 
     @GetMapping("/contribute-phrasal-verbs")
     public ModelAndView contribute_phrasal_verbs() {
-        LOG.info("Index ");
+        LOG.info("Call contribute-phrasal-verbs ");
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("title", "Contribute Phrasal Verbs");
         modelAndView.setViewName("contributePhrasalVerbs");
         return modelAndView;
     }
+
+    @GetMapping("/contribute-phrasal-verbs-view")
+    public ModelAndView contribute_phrasal_verbs_view(@RequestParam(value="contribute", required=false, defaultValue = "") String contribute) {
+        LOG.info("Call contribute-phrasal-verbs-view ");
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("title", "Contribute Phrasal Verbs");
+        modelAndView.setViewName("contributePhrasalVerbsView");
+
+        // Get contribute
+        Contribute contributeElement = contributeRepository.findByid(new ObjectId(contribute));
+        System.out.println("contributeElement: " + contributeElement);
+        // Phrasal verb for table
+        List<PhrasalVerb> phrasalVerbLst = BaBeeUtil.getPhrasalVerbFromText(contributeElement.getContent());
+
+        modelAndView.addObject("contribute", contributeElement);
+        modelAndView.addObject("phrasalVerbLst", phrasalVerbLst);
+
+        return modelAndView;
+    }
+
+    @GetMapping("/contribute-phrasal-verbs-view-admin")
+    public ModelAndView contribute_phrasal_verbs_view_admin(@RequestParam(value="contribute", required=false, defaultValue = "") String contribute) {
+        LOG.info("Call contribute-phrasal-verbs-view ");
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("title", "Contribute Phrasal Verbs");
+        modelAndView.setViewName("contributePhrasalVerbsViewAdmin");
+
+        // Get contribute
+        Contribute contributeElement = contributeRepository.findByid(new ObjectId(contribute));
+        System.out.println("contributeElement: " + contributeElement);
+        // Phrasal verb for table
+        List<PhrasalVerb> phrasalVerbLst = BaBeeUtil.getPhrasalVerbFromText(contributeElement.getContent());
+
+        modelAndView.addObject("contribute", contributeElement);
+        modelAndView.addObject("phrasalVerbLst", phrasalVerbLst);
+
+        return modelAndView;
+    }
+
+
 
 
     public static void main(String[] args) {

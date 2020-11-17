@@ -7,17 +7,17 @@
             <#if contributeLst??>
             <#list contributeLst as contribute>
             <div class="post-preview">
-                <a href="post.html">
+                <a href="/contribute-phrasal-verbs-view?contribute=${contribute.id}">
                     <h2 class="post-title">
-                        Thanks for contribution of ${contribute.contributor!''}
+                        Thanks for contribution of ${contribute.contributor!''}. We will confirm soon.
                     </h2>
                     <h3 class="post-subtitle">
-                        ${contribute.type!''}
+                        ${contribute.type!''} is ${contribute.status!''}
                     </h3>
                 </a>
                 <p class="post-meta">Posted by
                     <a href="#">${contribute.contributor!''}</a>
-                    on ${contribute.createdDate!''}</p>
+                    on ${contribute.creationDate?string('dd MMMM yyyy')}</p>
             </div>
             </#list>
             </#if>

@@ -81,4 +81,18 @@ public class PhrasalVerb {
     public void setExample(String example) {
         this.example = example;
     }
+
+    @Override
+    public String toString() {
+        return "PhrasalVerb{" +
+                "id='" + id + '\'' +
+                ", verb='" + verb + '\'' +
+                ", preposition='" + preposition + '\'' +
+                ", display='" + display + '\'' +
+                ", definition='" + definition + '\'' +
+                ", example='" + example + '\'' +
+                ", creationDate=" + creationDate +
+                ", contributor='" + contributor + '\'' +
+                '}';
+    }
 }

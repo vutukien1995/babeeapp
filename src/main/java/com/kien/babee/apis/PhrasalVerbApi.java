@@ -29,6 +29,11 @@ public class PhrasalVerbApi {
     @PostMapping("/create")
     public PhrasalVerb addNew (@RequestBody PhrasalVerb phrasalVerb) {
         LOG.info("Saving a new PhrasalVerb.");
+
+        // format data
+        phrasalVerb.setVerb(phrasalVerb.getVerb().trim().toLowerCase());
+        phrasalVerb.setPreposition(phrasalVerb.getPreposition().trim().toLowerCase());
+
         return phrasalVerbRepository.save(phrasalVerb);
     }
 

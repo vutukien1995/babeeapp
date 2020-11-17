@@ -39,18 +39,14 @@
           <th>Type</th>
           <th>Meaning</th>
         </tr>
+        <#list wordLst as word>
         <tr>
           <td>#</td>
-          <td>equivalent</td>
-          <td>adj</td>
-          <td>Tương đương</td>
+          <td>${word.word}</td>
+          <td>${word.type}</td>
+          <td>${word.meaning}</td>
         </tr>
-        <tr>
-          <td>#</td>
-          <td>critical</td>
-          <td>n</td>
-          <td>Sự chỉ trích, phê phán - Sự dữ dội, bạo kích</td>
-        </tr>
+      </#list>
       </table>
     </div>
   </div>
@@ -82,30 +78,6 @@
   </div>
 </div>
 
-<hr>
 
-<div class="container">
-  <div class="row">
-    <div class="col-lg-8 col-md-10 mx-auto">
-      <h4>Vocabulary:</h4>
-      <table class="table">
-        <tr>
-          <th>No</th>
-          <th>Vocabulary</th>
-          <th>Type</th>
-          <th>Meaning</th>
-        </tr>
-        <#list wordLst as word>
-        <tr>
-          <td>#</td>
-          <td>${word.word}</td>
-          <td>${word.type}</td>
-          <td>${word.meaning}</td>
-        </tr>
-      </#list>
-      </table>
-    </div>
-  </div>
-</div>
 
 </@layout.page>

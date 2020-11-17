@@ -1,10 +1,14 @@
 package com.kien.babee.entities;
 
+import java.util.Date;
+
 public class Word {
 
     private String word;
     private String type;
     private String meaning;
+    private String level;
+    private Date creationDate = new Date();
 
     public String getWord() {
         return word;
